@@ -1,8 +1,27 @@
 # FieldOps — Field Service Management SaaS
+## https://field-ops-six.vercel.app/
 
 Portfolio-quality multi-tenant Field Service Management platform for HVAC, plumbing, electrical, IT repair, and similar service businesses.
 
 FieldOps lets a company manage customers, technicians, jobs, scheduling, equipment, inventory, photos, notes, and PDF service reports from one responsive web application.
+
+---
+
+## Demo credentials (Development seed)
+
+Fictional Acme Services tenant (enabled when `Database:SeedDemoData` is true, default in Development):
+
+| Role | Email | Password |
+|------|-------|----------|
+| Owner | `admin@acme.example` | `Demo123!` |
+| Dispatcher | `dispatcher@acme.example` | `Demo123!` |
+| Technician | `technician@acme.example` | `Demo123!` |
+
+| Role | Capabilities |
+|------|----------------|
+| **Owner** | Full company access including settings and users |
+| **Dispatcher** | Customers, jobs, scheduling, dashboard (no user/settings admin) |
+| **Technician** | Assigned jobs only (read + mutate): status updates, notes, photos, materials, complete, reports. Customer directory, calendar, dashboard, and search are manager-only. |
 
 ---
 
@@ -59,16 +78,6 @@ FieldOps lets a company manage customers, technicians, jobs, scheduling, equipme
 2. `ICurrentUser` / `ITenantContext` read claims only.
 3. EF Core global query filters scope `TenantEntity` rows to the current company.
 4. Mutations re-check ownership; technicians may only mutate assigned jobs.
-
-### Authorization model
-
-| Role | Capabilities |
-|------|----------------|
-| **Owner** | Full company access including settings and users |
-| **Dispatcher** | Customers, jobs, scheduling, dashboard (no user/settings admin) |
-| **Technician** | Assigned jobs only (read + mutate): status updates, notes, photos, materials, complete, reports. Customer directory, calendar, dashboard, and search are manager-only. |
-
----
 
 ## Privacy & Security
 
@@ -131,22 +140,6 @@ docker compose up --build
 - Web: http://localhost:3000  
 - API: http://localhost:8080  
 - Swagger: http://localhost:8080/swagger  
-
----
-
-## Demo credentials (Development seed)
-
-Fictional Acme Services tenant (enabled when `Database:SeedDemoData` is true, default in Development):
-
-| Role | Email | Password |
-|------|-------|----------|
-| Owner | `admin@acme.example` | `Demo123!` |
-| Dispatcher | `dispatcher@acme.example` | `Demo123!` |
-| Technician | `technician@acme.example` | `Demo123!` |
-
-Company: **Acme Services** — seeded with fictional customers, jobs, materials, and equipment.
-
-> Development / demo environment only. Do not use real personal data in shared instances.
 
 ---
 
