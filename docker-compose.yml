@@ -1,0 +1,68 @@
+# FieldOps - full stack: PostgreSQL + ASP.NET Core API + static web app (nginx).
+#
+#   docker compose up --build
+#
+# Copy .env.example to .env to override any value below (every value has the same default as .env.example).
+# Web:  http://localhost:3000     API: http://localhost:8080 (Swagger at /swagger when ASPNETCORE_ENVIRONMENT=Development)
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-fieldops}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-fieldops_dev_password}
+      POSTGRES_DB: ${POSTGRES_DB:-fieldops}
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-fieldops} -d ${POSTGRES_DB:-fieldops}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  api:
+    build:
+      context: ./backend
+      dockerfile: FieldOps.Api/Dockerfile
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT:-Development}
+      ASPNETCORE_URLS: ${ASPNETCORE_URLS:-http://+:8080}
+      ConnectionStrings__DefaultConnection: ${ConnectionStrings__DefaultConnection:-Host=postgres;Port=5432;Database=fieldops;Username=fieldops;Password=fieldops_dev_password}
+      Jwt__Key: ${Jwt__Key:-CHANGE_ME_TO_A_LONG_RANDOM_SECRET_AT_LEAST_32_CHARS}
+      Jwt__Issuer: ${Jwt__Issuer:-FieldOps}
+      Jwt__Audience: ${Jwt__Audience:-FieldOps}
+      Jwt__AccessTokenMinutes: ${Jwt__AccessTokenMinutes:-60}
+      Jwt__RefreshTokenDays: ${Jwt__RefreshTokenDays:-7}
+      Cors__Origins: ${Cors__Origins:-http://localhost:5173,http://localhost:3000}
+      FileStorage__RootPath: ${FileStorage__RootPath:-/app/uploads}
+      FileStorage__MaxBytes: ${FileStorage__MaxBytes:-5242880}
+      # Apply EF migrations on startup (always on in Development; set true for other environments).
+      Database__MigrateOnStartup: ${Database__MigrateOnStartup:-true}
+      # Demo data (Acme Services; admin@acme.example / dispatcher@acme.example / technician@acme.example — see README).
+      Database__SeedDemoData: ${Database__SeedDemoData:-true}
+    ports:
+      - "8080:8080"
+    volumes:
+      - uploads_data:/app/uploads
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        VITE_API_URL: ${VITE_API_URL:-http://localhost:8080/api}
+    restart: unless-stopped
+    depends_on:
+      - api
+    ports:
+      - "3000:80"
+
+volumes:
+  postgres_data:
+  uploads_data:

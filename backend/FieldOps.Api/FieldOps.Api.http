@@ -1,0 +1,23 @@
+@host = http://localhost:5087
+@token = paste-access-token-here
+
+### Health
+GET {{host}}/health
+
+### Login (Development seed data)
+POST {{host}}/api/auth/login
+Content-Type: application/json
+
+{ "email": "admin@demo.com", "password": "Demo123!" }
+
+### Current user
+GET {{host}}/api/auth/me
+Authorization: Bearer {{token}}
+
+### Dashboard
+GET {{host}}/api/dashboard
+Authorization: Bearer {{token}}
+
+### Jobs (paged, filtered)
+GET {{host}}/api/jobs?page=1&pageSize=20&status=Scheduled&sortBy=scheduledStart&sortDir=asc
+Authorization: Bearer {{token}}

@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="FieldOps.Api/FieldOps.Api.csproj" />
+  <Project Path="FieldOps.Application/FieldOps.Application.csproj" />
+  <Project Path="FieldOps.Domain/FieldOps.Domain.csproj" />
+  <Project Path="FieldOps.Infrastructure/FieldOps.Infrastructure.csproj" />
+  <Project Path="FieldOps.Tests/FieldOps.Tests.csproj" />
+</Solution>

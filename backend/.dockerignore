@@ -1,0 +1,10 @@
+**/bin/
+**/obj/
+**/.vs/
+**/.vscode/
+**/uploads/
+**/TestResults/
+FieldOps.Tests/
+**/*.user
+**/Dockerfile*
+**/.git*

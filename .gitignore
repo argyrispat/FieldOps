@@ -1,0 +1,44 @@
+# Environment
+.env
+.env.local
+frontend/.env
+frontend/.env.local
+*.user
+*.suo
+
+# .NET
+**/bin/
+**/obj/
+**/out/
+*.dll
+*.pdb
+*.cache
+TestResults/
+.vs/
+
+# Node
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+
+# Uploads / local storage
+uploads/
+**/uploads/
+
+# IDE
+.idea/
+.vscode/*
+!.vscode/extensions.json
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+
+# Coverage
+coverage/
+*.lcov
