@@ -28,8 +28,9 @@ public static class DependencyInjection
 
         services.AddDbContext<AppDbContext>((sp, options) =>
         {
-            var connection = configuration.GetConnectionString("DefaultConnection")
-                             ?? throw new InvalidOperationException("ConnectionStrings:DefaultConnection is not configured.");
+            var connection = PostgresConnectionString.Normalize(
+                configuration.GetConnectionString("DefaultConnection")
+                ?? throw new InvalidOperationException("ConnectionStrings:DefaultConnection is not configured."));
             options.UseNpgsql(connection, npgsql => npgsql.MigrationsAssembly(typeof(AppDbContext).Assembly.FullName));
         });
 

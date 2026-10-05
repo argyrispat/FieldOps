@@ -28,8 +28,9 @@ public sealed class AppDbContextFactory : IDesignTimeDbContextFactory<AppDbConte
 {
     public AppDbContext CreateDbContext(string[] args)
     {
-        var connection = Environment.GetEnvironmentVariable("ConnectionStrings__DefaultConnection")
-                         ?? "Host=localhost;Port=5432;Database=fieldops;Username=fieldops;Password=fieldops_dev_password";
+        var connection = PostgresConnectionString.Normalize(
+            Environment.GetEnvironmentVariable("ConnectionStrings__DefaultConnection")
+            ?? "Host=localhost;Port=5432;Database=fieldops;Username=fieldops;Password=fieldops_dev_password");
 
         var options = new DbContextOptionsBuilder<AppDbContext>()
             .UseNpgsql(connection, o => o.MigrationsAssembly(typeof(AppDbContext).Assembly.FullName))
