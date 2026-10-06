@@ -11,6 +11,9 @@ import { getErrorMessage } from '@/lib/api'
 import { AuthLayout } from './AuthLayout'
 import { homePathFor, useAuth } from './AuthContext'
 
+const DEMO_EMAIL = 'admin@acme.example'
+const DEMO_PASSWORD = 'Demo123!'
+
 const schema = z.object({
   email: z.string().min(1, 'Email is required').email('Enter a valid email address'),
   password: z.string().min(1, 'Password is required'),
@@ -27,6 +30,7 @@ export default function LoginPage() {
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors, isSubmitting },
   } = useForm<FormValues>({ resolver: zodResolver(schema), defaultValues: { email: '', password: '' } })
 
@@ -42,8 +46,37 @@ export default function LoginPage() {
     }
   }
 
+  const fillDemo = () => {
+    setValue('email', DEMO_EMAIL, { shouldValidate: true })
+    setValue('password', DEMO_PASSWORD, { shouldValidate: true })
+  }
+
   return (
     <AuthLayout title="Sign in" subtitle="Welcome back. Enter your credentials to access your workspace.">
+      <div className="notice-info mb-5 rounded-md px-3 py-2.5 text-sm">
+        <p className="font-medium">Demo account</p>
+        <dl className="mt-1.5 space-y-0.5 text-[0.8125rem]">
+          <div className="flex flex-wrap gap-x-2">
+            <dt className="opacity-80">Email</dt>
+            <dd>
+              <code className="font-mono">{DEMO_EMAIL}</code>
+            </dd>
+          </div>
+          <div className="flex flex-wrap gap-x-2">
+            <dt className="opacity-80">Password</dt>
+            <dd>
+              <code className="font-mono">{DEMO_PASSWORD}</code>
+            </dd>
+          </div>
+        </dl>
+        <button
+          type="button"
+          onClick={fillDemo}
+          className="mt-2 text-[0.8125rem] font-medium underline-offset-2 hover:underline"
+        >
+          Fill demo credentials
+        </button>
+      </div>
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-5" noValidate>
         {formError && (
           <div role="alert" className="notice-danger rounded-md px-3 py-2.5 text-sm">
